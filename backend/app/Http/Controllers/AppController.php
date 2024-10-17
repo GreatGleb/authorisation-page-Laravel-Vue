@@ -11,8 +11,15 @@ use Illuminate\Support\Facades\DB;
 
 class AppController extends Controller
 {
+
+    public function getAllUsers(): \Illuminate\Http\JsonResponse
+    {
+        return response()->json(User::all()->toArray());
+    }
+
     public function saveUser(Request $request)
     {
+        $data = [];
         $result = 1;
         try {
             $newUser = new User;
@@ -26,6 +33,13 @@ class AppController extends Controller
             $result = $e->getCode();
         }
 
-        return $result;
+        if($result === 1) {
+            $token = $newUser->createToken('auth_token')->plainTextToken;
+            $data['access_token'] = $token;
+        }
+
+        $data['result'] = $result;
+
+        return response()->json($data);
     }
 }
