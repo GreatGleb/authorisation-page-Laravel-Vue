@@ -4,8 +4,12 @@ const api = axios.create({
     baseURL: 'https://localhost/authorisation_page/backend/public/api'
 });
 
-export const getDatas = () => {
-    return api.get('/data')
+export const getAllUsers = async (token) => {
+    return await api.get('/getAllUsers', {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
         .then(response => {
             return response.data;
         })
@@ -14,8 +18,8 @@ export const getDatas = () => {
         });
 };
 
-export const saveUser = (data) => {
-    return api.post('/saveUser', data)
+export const saveUser = async (data) => {
+    return await api.post('/saveUser', data)
         .then(response => {
             return response.data;
         })
