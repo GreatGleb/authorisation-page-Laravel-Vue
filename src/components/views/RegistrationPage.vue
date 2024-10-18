@@ -48,6 +48,17 @@ export default {
       name: '',
     };
   },
+  computed: {
+    user() {
+      return {
+        name: this.name,
+        email: this.email,
+        age: this.age,
+        city: this.city,
+        sex: this.sex
+      }
+    }
+  },
   methods: {
     setPolitic(e) {
       // avoid double click
@@ -124,7 +135,7 @@ export default {
       }
 
       for(let parent of parents) {
-        if(parent.classList && parent.classList.contains('list') || parents[0].classList.contains('inputs')) {
+        if(parent.classList && parent.classList.contains('list') || (parents[0] && parents[0].classList.contains('inputs'))) {
           isInsideList = 1
         }
       }
@@ -135,11 +146,19 @@ export default {
       const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
       return emailRegex.test(email);
     },
-    buttonStart() {
-      console.log(this.validate())
-      // if(this.validate()) {
-      //
-      // }
+    async buttonStart() {
+      if(this.validate()) {
+        let res = await this.$store.dispatch('register', this.user)
+        if(res && res.result === 1) {
+          this.$router.push({name: 'listUsers'})
+        } else {
+          if(res && res.result === '23505') {
+            alert('Такой пользователь уже зарегистрирован')
+          } else {
+            alert('Неизвестная ошибка')
+          }
+        }
+      }
     },
     validate() {
       let valid = 1;
@@ -185,7 +204,7 @@ export default {
     top: 0;
     left: 0;
     height: calc(100vh - 60px);
-    width: 100vw;
+    width: 100%;
     padding: 30px 0 30px 0;
     background-image: linear-gradient(180deg, rgba(199, 124, 180, 0.4) 0%, rgba(243, 118, 116, 0.6) 50.22%, rgba(199, 124, 180, 0.4) 100%), url('~@/assets/background.jpg');
     background-position: left center;
