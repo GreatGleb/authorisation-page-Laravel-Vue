@@ -17,9 +17,9 @@
             <input type="text" class="single" placeholder="Ваша почта">
           </div>
         </div>
-        <div class="politic">
-          <div class="politic-button"></div>
-          <input type="checkbox" id="politic" name="politic" value="" hidden>
+        <div class="politic" @click="setPolitic">
+          <div class="politic-button" ref="politicButton"></div>
+          <input type="checkbox" ref="politicCheckbox" name="politic" value="0" hidden>
           <label for="politic">Я соглашаюсь с <a href="">политикой обработки персональных данных</a></label>
         </div>
         <div class="button-start">Начать</div>
@@ -31,6 +31,22 @@
 <script>
 export default {
   name: 'RegistrationPage',
+  methods: {
+    setPolitic(e) {
+      // avoid double click
+      if(!e.target.parentNode.classList.contains('politic')) {
+        return 0
+      }
+
+      this.$refs.politicButton.classList.toggle('selected')
+
+      if(this.$refs.politicButton.classList.contains('selected')) {
+        this.$refs.politicCheckbox.value = 1
+      } else {
+        this.$refs.politicCheckbox.value = 0
+      }
+    }
+  }
 }
 </script>
 
