@@ -1,14 +1,13 @@
 <template>
-  <RegistrationPage />
+  <router-view />
 </template>
 
 <script>
-import RegistrationPage from './components/views/RegistrationPage.vue'
 
 export default {
   name: 'App',
   components: {
-    RegistrationPage
+
   }
 }
 </script>
