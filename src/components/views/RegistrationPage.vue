@@ -11,7 +11,14 @@
           </div>
           <div class="row">
             <input type="text" placeholder="Город проживания">
-            <input type="text" placeholder="Ваш пол*">
+            <div class="list" ref="list" @mouseout="mouseOutSexList">
+              <div class="list-button" @click="toggleSexList"></div>
+              <input type="text" ref="sexInput" class="sex" placeholder="Ваш пол*" disabled="">
+              <div class="drop-down-list" ref="dropDownList">
+                <div class="item" @click="selectSex('Мужской')">Мужской</div>
+                <div class="item" @click="selectSex('Женский')">Женский</div>
+              </div>
+            </div>
           </div>
           <div class="row">
             <input type="text" class="single" placeholder="Ваша почта">
@@ -45,6 +52,73 @@ export default {
       } else {
         this.$refs.politicCheckbox.value = 0
       }
+    },
+    toggleSexList() {
+      if(this.$refs.list.classList.contains('open')) {
+        this.$refs.list.classList.toggle('open')
+
+        setTimeout(()=> {
+          this.$refs.dropDownList.style.display = 'none'
+        }, 500)
+      } else {
+        this.$refs.dropDownList.style.display = 'block';
+
+        setTimeout(()=> {
+          this.$refs.list.classList.toggle('open')
+        })
+      }
+
+      setTimeout(()=> {
+        if(this.$refs.list.classList.contains('open')) {
+          document.body.addEventListener('click', this.bodyClickToCloseSexList)
+        }
+      })
+    },
+    selectSex(sex) {
+      this.$refs.sexInput.value = sex
+      this.closeSexList()
+    },
+    mouseOutSexList(e) {
+      //check if it not inside list
+      let isInsideList = this.checkIfClickInsideSexList(e.relatedTarget)
+      if(isInsideList) {
+        return 0
+      }
+
+      this.closeSexList()
+    },
+    bodyClickToCloseSexList(e) {
+      let isInsideList = this.checkIfClickInsideSexList(e.target)
+
+      if(!isInsideList) {
+        this.closeSexList()
+      }
+
+      document.body.removeEventListener('click', this.bodyClickToCloseSexList)
+    },
+    closeSexList() {
+      this.$refs.list.classList.remove('open')
+
+      setTimeout(()=> {
+        this.$refs.dropDownList.style.display = 'none';
+      }, 500)
+    },
+    checkIfClickInsideSexList(relatedTarget) {
+      let isInsideList = 0
+      let parents = []
+      let parent = relatedTarget
+      while(parent && parent.tagName !== 'BODY') {
+        parents.push(parent)
+        parent = parent.parentNode;
+      }
+
+      for(let parent of parents) {
+        if(parent.classList && parent.classList.contains('list') || parents[0].classList.contains('inputs')) {
+          isInsideList = 1
+        }
+      }
+
+      return isInsideList
     }
   }
 }
@@ -118,12 +192,36 @@ export default {
     font-size: 18px;
     font-weight: 400;
     line-height: 23.4px;
-    letter-spacing: -0.02em;
   }
 
   input[type="text"].single {
     width: 100%;
     max-width: 100%;
+  }
+
+  .list {
+    position: relative;
+  }
+
+  input.sex {
+    cursor: pointer;
+  }
+
+  .list::after {
+    content: '';
+    position: absolute;
+    right: 22px;
+    top: 22px;
+    width: 10px;
+    height: 10px;
+    border-left: 2px solid rgba(255, 255, 255, 0.7);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.7);
+    transform: rotate(-45deg);
+    transition: all .5s ease;
+  }
+
+  .list.open::after {
+    transform: rotate(135deg);
   }
 
   ::placeholder {
@@ -185,6 +283,53 @@ export default {
     font-size: 18px;
     font-weight: 400;
     line-height: 18px;
+    cursor: pointer;
+  }
+
+  .drop-down-list {
+    display: none;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    max-width: 234.5px;
+    margin-top: 8px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(200px);
+    color: #fff;
+    font-family: Arial,serif; /* Circe could'nt find */
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 23.4px;
+    opacity: 0;
+    transition: .5s all ease;
+  }
+
+  .list.open .drop-down-list {
+    top: 61.5px;
+    opacity: 1;
+  }
+
+  .drop-down-list .item {
+    padding: 10px 0 10px 0;
+    cursor: pointer;
+    transition: .5s all ease;
+  }
+
+  .drop-down-list .item:hover {
+    background: rgba(44, 62, 80, 0.15);
+  }
+
+  .list-button {
+    position: absolute;
+    width: 100%;
+    max-width: 176.5px;
+    height: 62px;
+    padding: 0 0 0 60px;
+    border-radius: 100px;
     cursor: pointer;
   }
 
