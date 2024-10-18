@@ -133,13 +133,15 @@ export default {
   }
 
   a,
-  .politic {
+  .politic,
+  .politic label {
     color: rgba(255, 255, 255, 1);
     font-family: Arial,serif; /* Circe could'nt find */
     font-size: 14px;
     font-weight: 400;
     line-height: 18.2px;
     text-align: left;
+    cursor: pointer;
   }
 
   .politic-button {
@@ -167,6 +169,7 @@ export default {
     font-size: 18px;
     font-weight: 400;
     line-height: 18px;
+    cursor: pointer;
   }
 
 </style>
