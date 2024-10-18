@@ -6,11 +6,11 @@
         <h2>Авторизация</h2>
         <div class="inputs">
           <div class="row">
-            <input type="text" placeholder="Ваше имя*">
-            <input type="text" placeholder="Ваш возраст*">
+            <input type="text" placeholder="Ваше имя*" v-model="name">
+            <input type="text" placeholder="Ваш возраст*" v-mask="digitsMask" v-model="age">
           </div>
           <div class="row">
-            <input type="text" placeholder="Город проживания">
+            <input type="text" placeholder="Город проживания" v-model="city">
             <div class="list" ref="list" @mouseout="mouseOutSexList">
               <div class="list-button" @click="toggleSexList"></div>
               <input type="text" ref="sexInput" class="sex" placeholder="Ваш пол*" disabled="">
@@ -21,15 +21,14 @@
             </div>
           </div>
           <div class="row">
-            <input type="text" class="single" placeholder="Ваша почта">
+            <input type="text" class="single" placeholder="Ваша почта" v-model="email">
           </div>
         </div>
         <div class="politic" @click="setPolitic">
           <div class="politic-button" ref="politicButton"></div>
-          <input type="checkbox" ref="politicCheckbox" name="politic" value="0" hidden>
           <label for="politic">Я соглашаюсь с <a href="">политикой обработки персональных данных</a></label>
         </div>
-        <div class="button-start">Начать</div>
+        <div class="button-start" @click="buttonStart">Начать</div>
       </div>
     </div>
   </div>
@@ -38,6 +37,17 @@
 <script>
 export default {
   name: 'RegistrationPage',
+  data() {
+    return {
+      digitsMask: '###',
+      email: '',
+      politic: 0,
+      sex: '',
+      city: '',
+      age: null,
+      name: '',
+    };
+  },
   methods: {
     setPolitic(e) {
       // avoid double click
@@ -48,9 +58,9 @@ export default {
       this.$refs.politicButton.classList.toggle('selected')
 
       if(this.$refs.politicButton.classList.contains('selected')) {
-        this.$refs.politicCheckbox.value = 1
+        this.politic = 1
       } else {
-        this.$refs.politicCheckbox.value = 0
+        this.politic = 0
       }
     },
     toggleSexList() {
@@ -76,6 +86,7 @@ export default {
     },
     selectSex(sex) {
       this.$refs.sexInput.value = sex
+      this.sex = sex
       this.closeSexList()
     },
     mouseOutSexList(e) {
@@ -119,6 +130,46 @@ export default {
       }
 
       return isInsideList
+    },
+    isEmail(email) {
+      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      return emailRegex.test(email);
+    },
+    buttonStart() {
+      console.log(this.validate())
+      // if(this.validate()) {
+      //
+      // }
+    },
+    validate() {
+      let valid = 1;
+
+      if(!this.isEmail(this.email)) {
+        valid = 0;
+        alert('Почта введена неправильно');
+      }
+
+      if(!this.politic) {
+        valid = 0;
+        alert('Подтвердите согласие с политикой');
+      }
+
+      if(!this.sex) {
+        valid = 0;
+        alert('Укажите ваш пол');
+      }
+
+      if(!this.age) {
+        valid = 0;
+        alert('Укажите ваш возраст');
+      }
+
+      if(!this.name) {
+        valid = 0;
+        alert('Укажите ваше имя');
+      }
+
+      return valid;
     }
   }
 }
