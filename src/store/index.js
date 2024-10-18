@@ -9,6 +9,7 @@ export default createStore({
   mutations: {
     SET_TOKEN(state, token) {
       state.token = token
+      localStorage.setItem('token', token)
     },
     SET_USERS(state, users) {
       state.users = users
@@ -29,7 +30,14 @@ export default createStore({
     },
     async getUsers({ state, commit }) {
       try {
-        const response = getAllUsers(state.token)
+        let token
+        if(state.token) {
+          token = state.token
+        } else if(localStorage.getItem('token')) {
+          token = localStorage.getItem('token')
+        }
+
+        const response = getAllUsers(token)
         commit('SET_USERS', response)
 
         return response
