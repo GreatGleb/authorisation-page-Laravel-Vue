@@ -45,5 +45,15 @@ export default createStore({
         console.error(error)
       }
     },
+    getToken({ state }) {
+      let token
+      if(state.token) {
+        token = state.token
+      } else if(localStorage.getItem('token')) {
+        token = localStorage.getItem('token')
+      }
+
+      return token
+    }
   },
 })

@@ -25,6 +25,12 @@ export default {
     }
   },
   async mounted() {
+    let token = await this.$store.dispatch('getToken')
+
+    if(!token) {
+      this.$router.push({name: 'home'})
+    }
+
     this.users = await this.$store.dispatch('getUsers')
   },
 }
