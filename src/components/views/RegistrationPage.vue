@@ -237,6 +237,8 @@ export default {
 
   input:focus {
     caret-color: #fff;
+    border-color: #fff;
+    outline: #fff;
   }
 
   .politic {
