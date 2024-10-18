@@ -1,4 +1,4 @@
-# authorisation
+# authorization
 
 ## Project setup
 ```
